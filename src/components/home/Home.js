@@ -16,8 +16,10 @@ class Sample extends React.Component {
         this.changeAlphaSortMode = this.changeAlphaSortMode.bind(this);
         this.changeViewFilter = this.changeViewFilter.bind(this);
     }
-    componentDidLoad() {
-        
+    componentDidMount() {
+        this.props.getCatImages().then(res => {
+            debugger
+        })
     }
     changeAlphaSortMode(e) {
         this.setState({
