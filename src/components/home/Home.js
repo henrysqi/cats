@@ -1,9 +1,9 @@
 import React from 'react';
-import './Sample.css';
+import './Home.css';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {sampleAction} from './../../actions/index';
+import {getCatImages} from './../../actions/index';
 
 class Sample extends React.Component {
     constructor() {
@@ -13,20 +13,20 @@ class Sample extends React.Component {
     }
     render() {
         return (
-            <div>
-                Hello World
+            <div id="home">
+                
             </div>
         )
     }
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({sampleAction}, dispatch);
+    return bindActionCreators({getCatImages}, dispatch);
 }
 
 function mapStateToProps(state){
     return {
-        sample: state.sample
+        cat: state.cat
     }
 }
 
