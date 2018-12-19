@@ -10,6 +10,7 @@ export default function(state = {}, action){
         case GET_CAT_FACTS:
             debugger;
             newState.catFacts = action.payload.data
+            return newState;
         default: 
             return state;
     }
