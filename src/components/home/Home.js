@@ -21,6 +21,8 @@ class Sample extends React.Component {
         this.changeViewFilter = this.changeViewFilter.bind(this);
         this.arrangeCatTiles = this.arrangeCatTiles.bind(this);
         this.changeViewAmount = this.changeViewAmount.bind(this);
+        this.goNextSingle = this.goNextSingle.bind(this);
+        this.goPrevSingle = this.goPrevSingle.bind(this);
     }
     componentDidMount() {
         const that = this;
@@ -38,8 +40,20 @@ class Sample extends React.Component {
     arrangeCatTiles() {
         const that = this;
         let result = this.props.cat.catTiles;
-        if (this.state.viewFilter === "favorites") {
+        if (this.state.viewFilter !== "all") {
             result = result.filter(elem => elem.favorite)
+        }
+        if (this.state.viewAmount !== "all") {
+            let howManyToShow = parseInt(this.state.viewAmount, 10);
+            let temp = [];
+            for (let i = this.state.showSingleCount; i < result.length; i++) {
+                if (temp.length >= howManyToShow) {
+                    break;
+                } else {
+                    temp.push(result[i])
+                }
+            }
+            result = temp;
         }
         switch (this.state.alphaSortMode) {
             case 'default':
@@ -122,6 +136,22 @@ class Sample extends React.Component {
     changeViewAmount(e) {
         this.setState({
             viewAmount: e.target.value
+        }, () => {
+            this.arrangeCatTiles()
+        })
+    }
+    goNextSingle() {
+        this.setState({
+            showSingleCount: this.state.showSingleCount >= this.props.cat.catTiles.length ? 0 : this.state.showSingleCount + 1
+        }, () => {
+            this.arrangeCatTiles()
+        })
+    }
+    goPrevSingle() {
+        this.setState({
+            showSingleCount: this.state.showSingleCount === 0 ? this.props.cat.catTiles.length - 1 : this.state.showSingleCount - 1
+        }, () => {
+            this.arrangeCatTiles()
         })
     }
     render() {
@@ -146,8 +176,8 @@ class Sample extends React.Component {
                     </select>
                 </div>
                 <div className="home-controls" style={{display: this.state.viewAmount === "all" ? "none" : "block"}}>
-                    <button>Prev</button>
-                    <button>Next</button>
+                    <button onClick={this.goPrevSingle}>Prev</button>
+                    <button onClick={this.goNextSingle}>Next</button>
                 </div>
                 <div className="home-cats">
                     {this.state.domCatTiles}
