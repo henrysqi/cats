@@ -1,4 +1,4 @@
-import {GET_CAT_IMAGES, GET_CAT_FACTS, CREATE_CAT_TILES} from './../actions/index';
+import {GET_CAT_IMAGES, GET_CAT_FACTS, CREATE_CAT_TILES, TOGGLE_FAVORITE_CAT_TILE} from './../actions/index';
 import {parseString} from 'xml2js';
 
 export default function(state = {catImages: [], catFacts: [], catTiles: []}, action){
@@ -27,10 +27,20 @@ export default function(state = {catImages: [], catFacts: [], catTiles: []}, act
             for (let i = 0; i < newState.catImages.length; i++) {
                 catTiles.push({
                     image: newState.catImages[i].url[0],
-                    fact: newState.catFacts[i].fact
+                    fact: newState.catFacts[i].fact,
+                    id: i
                 })
             }
             newState.catTiles = catTiles;
+            return newState;
+        case TOGGLE_FAVORITE_CAT_TILE:
+            const currentCatTiles = newState.catTiles;
+            for (let i = 0; i < currentCatTiles.length; i++) {
+                if (currentCatTiles[i].id === action.payload) {
+                    newState.catTiles[i].favorite = newState.catTiles[i].favorite ? false : true;
+                    break;
+                }
+            }
             return newState;
         default: 
             return state;

@@ -14,8 +14,8 @@ class CatTile extends React.Component {
     }
     render() {
         return (
-            <div className="cattile">
-                <img src={this.props.image} />
+            <div onClick={this.props.clickListener} className="cattile" style={{border: this.props.favorite ? '5px solid green' : '1px solid black'}}>
+                <img src={this.props.image} alt="" />
                 <p>{this.props.fact}</p>
             </div>
         )

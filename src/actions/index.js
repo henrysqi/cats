@@ -3,6 +3,7 @@ import axios from 'axios';
 export const GET_CAT_IMAGES = 'GET_CAT_IMAGES';
 export const GET_CAT_FACTS = 'GET_CAT_FACTS';
 export const CREATE_CAT_TILES = 'CREATE_CAT_TILES';
+export const TOGGLE_FAVORITE_CAT_TILE = 'TOGGLE_FAVORITE_CAT_TILE';
 
 const CROSS_ORIGIN_ME = 'https://cors-anywhere.herokuapp.com'
 // const CROSS_ORIGIN_ME = 'https://crossorigin.me'
@@ -34,5 +35,12 @@ export function getCatFacts() {
 export function createCatTiles() {
     return {
         type: CREATE_CAT_TILES
+    }
+}
+
+export function toggleFavoriteTile(props) {
+    return {
+        type: TOGGLE_FAVORITE_CAT_TILE,
+        payload: props
     }
 }

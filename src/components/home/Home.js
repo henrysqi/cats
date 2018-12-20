@@ -3,7 +3,7 @@ import './Home.css';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {getCatImages, getCatFacts, createCatTiles} from './../../actions/index';
+import {getCatImages, getCatFacts, createCatTiles, toggleFavoriteTile} from './../../actions/index';
 import CatTile from './../tiles/CatTile'
 
 class Sample extends React.Component {
@@ -11,9 +11,10 @@ class Sample extends React.Component {
         super();
         this.state = {
             alphaSortMode: 'default',
-            viewFilter: 'default',
+            viewFilter: 'all',
             viewAmount: 'all',
-            domCatTiles: []
+            domCatTiles: [],
+            showSingleCount: 0,
         }
 
         this.changeAlphaSortMode = this.changeAlphaSortMode.bind(this);
@@ -26,23 +27,38 @@ class Sample extends React.Component {
         this.props.getCatImages().then(() => {
             this.props.getCatFacts().then(() => {
                 that.props.createCatTiles()
-                that.arrangeCatTiles(that.state.alphaSortMode)
+                that.arrangeCatTiles()
             })
         })
     }
-    arrangeCatTiles(arrangement) {
-        switch (arrangement) {
+    toggleFavoriteTile(id) {
+        this.props.toggleFavoriteTile(id)
+        this.arrangeCatTiles()
+    }
+    arrangeCatTiles() {
+        const that = this;
+        let result = this.props.cat.catTiles;
+        if (this.state.viewFilter === "favorites") {
+            result = result.filter(elem => elem.favorite)
+        }
+        switch (this.state.alphaSortMode) {
             case 'default':
                 this.setState({
-                    domCatTiles: this.props.cat.catTiles.map((elem, idx) => {
+                    domCatTiles: result.map((elem, idx) => {
                         return (
-                            <CatTile image={elem.image} fact={elem.fact}/>
+                            <CatTile 
+                                id={elem.id}
+                                favorite={elem.favorite}
+                                clickListener={() => {that.toggleFavoriteTile(elem.id)}}
+                                image={elem.image}
+                                fact={elem.fact}
+                                key={idx} />
                         )
                     })
                 })
                 break;
             case 'az':
-                const azSortedCatTiles = this.props.cat.catTiles.sort((a,b) => {
+                const azSortedCatTiles = result.sort((a,b) => {
                     const aLastWord = a.fact.split(" ").splice(-1)[0]
                     const bLastWord = b.fact.split(" ").splice(-1)[0]
                     if (aLastWord > bLastWord) return 1;
@@ -52,13 +68,19 @@ class Sample extends React.Component {
                 this.setState({
                     domCatTiles: azSortedCatTiles.map((elem, idx) => {
                         return (
-                            <CatTile image={elem.image} fact={elem.fact}/>
+                            <CatTile 
+                                id={elem.id}
+                                favorite={elem.favorite}
+                                clickListener={() => {that.toggleFavoriteTile(elem.id)}}
+                                image={elem.image}
+                                fact={elem.fact}
+                                key={idx} />
                         )
                     })
                 })
                 break;
             case 'za':
-                const zaSortedCatTiles = this.props.cat.catTiles.sort((a,b) => {
+                const zaSortedCatTiles = result.sort((a,b) => {
                     const aLastWord = a.fact.split(" ").splice(-1)[0]
                     const bLastWord = b.fact.split(" ").splice(-1)[0]
                     if (aLastWord > bLastWord) return -1;
@@ -68,7 +90,13 @@ class Sample extends React.Component {
                 this.setState({
                     domCatTiles: zaSortedCatTiles.map((elem, idx) => {
                         return (
-                            <CatTile image={elem.image} fact={elem.fact}/>
+                            <CatTile 
+                                id={elem.id}
+                                favorite={elem.favorite}
+                                clickListener={() => {that.toggleFavoriteTile(elem.id)}}
+                                image={elem.image}
+                                fact={elem.fact}
+                                key={idx} />
                         )
                     })
                 })
@@ -81,12 +109,14 @@ class Sample extends React.Component {
         this.setState({
             alphaSortMode: e.target.value
         }, () => {
-            this.arrangeCatTiles(this.state.alphaSortMode)
+            this.arrangeCatTiles()
         })
     }
     changeViewFilter(e) {
         this.setState({
             viewFilter: e.target.value
+        }, () => {
+            this.arrangeCatTiles()
         })
     }
     changeViewAmount(e) {
@@ -115,6 +145,10 @@ class Sample extends React.Component {
                         <option value="1">One</option>
                     </select>
                 </div>
+                <div className="home-controls" style={{display: this.state.viewAmount === "all" ? "none" : "block"}}>
+                    <button>Prev</button>
+                    <button>Next</button>
+                </div>
                 <div className="home-cats">
                     {this.state.domCatTiles}
                 </div>
@@ -124,7 +158,7 @@ class Sample extends React.Component {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({getCatImages, getCatFacts, createCatTiles}, dispatch);
+    return bindActionCreators({getCatImages, getCatFacts, createCatTiles, toggleFavoriteTile}, dispatch);
 }
 
 function mapStateToProps(state){
