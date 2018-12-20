@@ -10,42 +10,88 @@ class Sample extends React.Component {
     constructor() {
         super();
         this.state = {
-            alphaSortMode: 'none',
+            alphaSortMode: 'default',
             viewFilter: 'default',
+            viewAmount: 'all',
             domCatTiles: []
         }
 
         this.changeAlphaSortMode = this.changeAlphaSortMode.bind(this);
         this.changeViewFilter = this.changeViewFilter.bind(this);
-        this.renderCatTiles = this.renderCatTiles.bind(this);
+        this.arrangeCatTiles = this.arrangeCatTiles.bind(this);
+        this.changeViewAmount = this.changeViewAmount.bind(this);
     }
     componentDidMount() {
         const that = this;
         this.props.getCatImages().then(() => {
             this.props.getCatFacts().then(() => {
-                this.renderCatTiles()
+                that.props.createCatTiles()
+                that.arrangeCatTiles(that.state.alphaSortMode)
             })
         })
     }
-    renderCatTiles() {
-        this.props.createCatTiles()
-        this.props.cat.catTiles
-        this.setState({
-            domCatTiles: this.props.cat.catTiles.map((elem, idx) => {
-                return (
-                    <CatTile image={elem.image} fact={elem.fact}/>
-                )
-            })
-        })
+    arrangeCatTiles(arrangement) {
+        switch (arrangement) {
+            case 'default':
+                this.setState({
+                    domCatTiles: this.props.cat.catTiles.map((elem, idx) => {
+                        return (
+                            <CatTile image={elem.image} fact={elem.fact}/>
+                        )
+                    })
+                })
+                break;
+            case 'az':
+                const azSortedCatTiles = this.props.cat.catTiles.sort((a,b) => {
+                    const aLastWord = a.fact.split(" ").splice(-1)[0]
+                    const bLastWord = b.fact.split(" ").splice(-1)[0]
+                    if (aLastWord > bLastWord) return 1;
+                    if (aLastWord < bLastWord) return -1;
+                    return 0
+                })
+                this.setState({
+                    domCatTiles: azSortedCatTiles.map((elem, idx) => {
+                        return (
+                            <CatTile image={elem.image} fact={elem.fact}/>
+                        )
+                    })
+                })
+                break;
+            case 'za':
+                const zaSortedCatTiles = this.props.cat.catTiles.sort((a,b) => {
+                    const aLastWord = a.fact.split(" ").splice(-1)[0]
+                    const bLastWord = b.fact.split(" ").splice(-1)[0]
+                    if (aLastWord > bLastWord) return -1;
+                    if (aLastWord < bLastWord) return 1;
+                    return 0
+                })
+                this.setState({
+                    domCatTiles: zaSortedCatTiles.map((elem, idx) => {
+                        return (
+                            <CatTile image={elem.image} fact={elem.fact}/>
+                        )
+                    })
+                })
+                break;
+            default:
+                break;
+        }
     }
     changeAlphaSortMode(e) {
         this.setState({
             alphaSortMode: e.target.value
+        }, () => {
+            this.arrangeCatTiles(this.state.alphaSortMode)
         })
     }
     changeViewFilter(e) {
         this.setState({
             viewFilter: e.target.value
+        })
+    }
+    changeViewAmount(e) {
+        this.setState({
+            viewAmount: e.target.value
         })
     }
     render() {
@@ -54,7 +100,7 @@ class Sample extends React.Component {
                 <div className="home-options">
                     <select id="home-options-alphasort" value={this.state.alphaSortMode} onChange={this.changeAlphaSortMode}>
                         <option value="" disabled>Sort By</option>
-                        <option value="none">None</option>
+                        <option value="default">None</option>
                         <option value="az">A to Z</option>
                         <option value="za">Z to A</option>
                     </select>
@@ -62,6 +108,11 @@ class Sample extends React.Component {
                         <option value="" disabled>View</option>
                         <option value="all">All</option>
                         <option value="favorites">Favorites</option>
+                    </select>
+                    <select id="home-options-viewAmount" value={this.state.viewAmount} onChange={this.changeViewAmount}>
+                        <option value="" disabled>Amount</option>
+                        <option value="all">All</option>
+                        <option value="1">One</option>
                     </select>
                 </div>
                 <div className="home-cats">

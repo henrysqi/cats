@@ -2,6 +2,10 @@
     padding: 20px;
 }
 
+.home-options {
+    margin-bottom: 30px;
+}
+
 .cattile {
     float: left;
     margin: 5px;

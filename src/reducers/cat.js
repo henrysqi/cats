@@ -27,8 +27,7 @@ export default function(state = {catImages: [], catFacts: [], catTiles: []}, act
             for (let i = 0; i < newState.catImages.length; i++) {
                 catTiles.push({
                     image: newState.catImages[i].url[0],
-                    fact: newState.catFacts[i].fact,
-                    favorited: false
+                    fact: newState.catFacts[i].fact
                 })
             }
             newState.catTiles = catTiles;
