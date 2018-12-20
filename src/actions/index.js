@@ -2,6 +2,7 @@ import axios from 'axios';
 
 export const GET_CAT_IMAGES = 'GET_CAT_IMAGES';
 export const GET_CAT_FACTS = 'GET_CAT_FACTS';
+export const CREATE_CAT_TILES = 'CREATE_CAT_TILES';
 
 const CROSS_ORIGIN_ME = 'https://cors-anywhere.herokuapp.com'
 // const CROSS_ORIGIN_ME = 'https://crossorigin.me'
@@ -27,5 +28,11 @@ export function getCatFacts() {
     return {
         type: GET_CAT_FACTS,
         payload: request
+    }
+}
+
+export function createCatTiles() {
+    return {
+        type: CREATE_CAT_TILES
     }
 }

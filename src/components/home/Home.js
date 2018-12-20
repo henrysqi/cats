@@ -3,25 +3,38 @@ import './Home.css';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
-import {getCatImages, getCatFacts} from './../../actions/index';
+import {getCatImages, getCatFacts, createCatTiles} from './../../actions/index';
+import CatTile from './../tiles/CatTile'
 
 class Sample extends React.Component {
     constructor() {
         super();
         this.state = {
             alphaSortMode: 'none',
-            viewFilter: 'default'
+            viewFilter: 'default',
+            domCatTiles: []
         }
 
         this.changeAlphaSortMode = this.changeAlphaSortMode.bind(this);
         this.changeViewFilter = this.changeViewFilter.bind(this);
+        this.renderCatTiles = this.renderCatTiles.bind(this);
     }
     componentDidMount() {
         const that = this;
         this.props.getCatImages().then(() => {
             this.props.getCatFacts().then(() => {
-                debugger
-                that.props.cat
+                this.renderCatTiles()
+            })
+        })
+    }
+    renderCatTiles() {
+        this.props.createCatTiles()
+        this.props.cat.catTiles
+        this.setState({
+            domCatTiles: this.props.cat.catTiles.map((elem, idx) => {
+                return (
+                    <CatTile image={elem.image} fact={elem.fact}/>
+                )
             })
         })
     }
@@ -51,13 +64,16 @@ class Sample extends React.Component {
                         <option value="favorites">Favorites</option>
                     </select>
                 </div>
+                <div className="home-cats">
+                    {this.state.domCatTiles}
+                </div>
             </div>
         )
     }
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({getCatImages, getCatFacts}, dispatch);
+    return bindActionCreators({getCatImages, getCatFacts, createCatTiles}, dispatch);
 }
 
 function mapStateToProps(state){
