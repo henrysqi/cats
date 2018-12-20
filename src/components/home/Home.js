@@ -44,6 +44,7 @@ class Sample extends React.Component {
             result = result.filter(elem => elem.favorite)
         }
         if (this.state.viewAmount !== "all") {
+            // debugger
             let howManyToShow = parseInt(this.state.viewAmount, 10);
             let temp = [];
             for (let i = this.state.showSingleCount; i < result.length; i++) {
@@ -141,15 +142,23 @@ class Sample extends React.Component {
         })
     }
     goNextSingle() {
+        let result = this.props.cat.catTiles;
+        if (this.state.viewFilter !== "all") {
+            result = result.filter(elem => elem.favorite)
+        }
         this.setState({
-            showSingleCount: this.state.showSingleCount >= this.props.cat.catTiles.length ? 0 : this.state.showSingleCount + 1
+            showSingleCount: this.state.showSingleCount >= result.length - 1? 0 : this.state.showSingleCount + 1
         }, () => {
             this.arrangeCatTiles()
         })
     }
     goPrevSingle() {
+        let result = this.props.cat.catTiles;
+        if (this.state.viewFilter !== "all") {
+            result = result.filter(elem => elem.favorite)
+        }
         this.setState({
-            showSingleCount: this.state.showSingleCount === 0 ? this.props.cat.catTiles.length - 1 : this.state.showSingleCount - 1
+            showSingleCount: this.state.showSingleCount === 0 ? result.length - 1 : this.state.showSingleCount - 1
         }, () => {
             this.arrangeCatTiles()
         })
