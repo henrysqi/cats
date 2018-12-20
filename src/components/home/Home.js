@@ -78,8 +78,8 @@ class Sample extends React.Component {
                 break;
             case 'az':
                 const azSortedCatTiles = result.sort((a,b) => {
-                    const aLastWord = a.fact.split(" ").splice(-1)[0]
-                    const bLastWord = b.fact.split(" ").splice(-1)[0]
+                    const aLastWord = a.fact.split(" ").splice(-1)[0].toLowerCase()
+                    const bLastWord = b.fact.split(" ").splice(-1)[0].toLowerCase()
                     if (aLastWord > bLastWord) return 1;
                     if (aLastWord < bLastWord) return -1;
                     return 0
@@ -100,8 +100,8 @@ class Sample extends React.Component {
                 break;
             case 'za':
                 const zaSortedCatTiles = result.sort((a,b) => {
-                    const aLastWord = a.fact.split(" ").splice(-1)[0]
-                    const bLastWord = b.fact.split(" ").splice(-1)[0]
+                    const aLastWord = a.fact.split(" ").splice(-1)[0].toLowerCase()
+                    const bLastWord = b.fact.split(" ").splice(-1)[0].toLowerCase()
                     if (aLastWord > bLastWord) return -1;
                     if (aLastWord < bLastWord) return 1;
                     return 0
