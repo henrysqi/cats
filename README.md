@@ -1,3 +1,3 @@
-How to run app:
-npm install
-npm start
+How to run app:<br/>
+npm install<br/>
+npm start<br/>
