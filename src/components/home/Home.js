@@ -15,6 +15,7 @@ class Sample extends React.Component {
             viewAmount: 'all',
             domCatTiles: [],
             showSingleCount: 0,
+            loading: true
         }
 
         this.changeAlphaSortMode = this.changeAlphaSortMode.bind(this);
@@ -28,6 +29,9 @@ class Sample extends React.Component {
         const that = this;
         this.props.getCatImages().then(() => {
             this.props.getCatFacts().then(() => {
+                this.setState({
+                    loading: false
+                })
                 that.props.createCatTiles()
                 that.arrangeCatTiles()
             })
@@ -184,12 +188,15 @@ class Sample extends React.Component {
                         <option value="1">One</option>
                     </select>
                 </div>
-                <div className="home-controls" style={{display: this.state.viewAmount === "all" ? "none" : "block"}}>
+                <div className="home-controls" style={{display: this.state.viewAmount === "all" || this.state.loading ? "none" : "block"}}>
                     <button onClick={this.goPrevSingle}>Prev</button>
                     <button onClick={this.goNextSingle}>Next</button>
                 </div>
-                <div className="home-cats">
+                <div className="home-cats" style={{display: this.state.loading ? "none" : "block"}}>
                     {this.state.domCatTiles}
+                </div>
+                <div style={{display: this.state.loading ? "block" : "none", fontSize: "5rem"}}>
+                    Cats are loading!
                 </div>
             </div>
         )
